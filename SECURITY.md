@@ -4,7 +4,7 @@
 
 ### Important Notice
 **Never commit API keys or sensitive credentials to the repository.** This includes:
-- Moonshot API keys
+- OpenAI-compatible API keys
 - OpenAI API keys
 - Database passwords
 - Any other authentication credentials
@@ -31,7 +31,7 @@
    - Use least-privilege access principles
 
 3. **API Key Rotation**:
-   - Regularly rotate your Moonshot API keys
+   - Regularly rotate your API keys
    - Update environment variables when rotating keys
    - Test the application after key rotation
 

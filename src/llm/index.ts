@@ -1,6 +1,6 @@
 import { LLMConfig } from '../types/index.js';
 import { Logger } from '../utils/logger.js';
-import { OpenAICompatibleClient } from './moonshot.js';
+import { OpenAICompatibleClient } from './openai-compatible.js';
 import { OpenAIClient } from './openai.js';
 
 export interface LLMClient {
@@ -16,6 +16,6 @@ export function createLLMClient(config: LLMConfig, logger: Logger): LLMClient {
   return new OpenAICompatibleClient(config, logger);
 }
 
-export { OpenAICompatibleClient } from './moonshot.js';
+export { OpenAICompatibleClient } from './openai-compatible.js';
 export { OpenAIClient } from './openai.js';
-export type { ChatMessage, ChatResponse } from './moonshot.js';
+export type { ChatMessage, ChatResponse } from './openai-compatible.js';

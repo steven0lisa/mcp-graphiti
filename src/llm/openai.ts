@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 import { LLMConfig } from '../types/index.js';
 import { Logger } from '../utils/logger.js';
-import { ChatMessage, ChatResponse } from './moonshot.js';
+import { ChatMessage, ChatResponse } from './openai-compatible.js';
 
 export class OpenAIClient {
   private client: OpenAI;

@@ -51,7 +51,7 @@ export class OpenAICompatibleClient {
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`Moonshot API error: ${response.status} ${errorText}`);
+        throw new Error(`OpenAI Compatible API error: ${response.status} ${errorText}`);
       }
 
       const data: any = await response.json();

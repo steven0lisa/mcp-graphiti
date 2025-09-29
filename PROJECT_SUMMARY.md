@@ -17,8 +17,7 @@
 - **索引创建**: 自动创建必要的数据库索引
 
 ### 3. AI模型集成
-- **Moonshot API支持**: 完整集成月之暗面AI模型
-- **OpenAI备用支持**: 提供OpenAI作为备选方案
+- **OpenAI兼容API支持**: 支持任何OpenAI兼容的API服务（包括Moonshot、OpenAI等）
 - **实体提取**: 自动从文本中提取实体信息
 - **关系抽取**: 智能识别实体间的关系
 - **文本摘要**: 自动生成内容摘要
@@ -114,7 +113,7 @@ mcp-graphiti/
            "NEO4J_URI": "bolt://localhost:7687",
            "NEO4J_USER": "neo4j",
            "NEO4J_PASSWORD": "your_password",
-           "MOONSHOT_API_KEY": "your_api_key"
+           "OPENAI_API_KEY": "your_api_key"
          }
        }
      }

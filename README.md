@@ -7,7 +7,7 @@ A Node.js implementation of the Graphiti temporal knowledge graph system as a Mo
 - **Temporal Knowledge Graph**: Build and query time-aware knowledge graphs
 - **Multiple Search Types**: Semantic, keyword, and hybrid search capabilities
 - **MCP Integration**: Full Model Context Protocol server implementation
-- **Multi-LLM Support**: Moonshot API and OpenAI integration
+- **Multi-LLM Support**: OpenAI-compatible API integration (supports OpenAI, Moonshot, etc.)
 - **Neo4j Database**: High-performance graph database backend
 - **NPX Support**: Easy installation and execution via NPX
 
@@ -43,12 +43,10 @@ NEO4J_URI=bolt://localhost:7687
 NEO4J_USER=neo4j
 NEO4J_PASSWORD=neo4j_password
 
-# AI Model Configuration (Moonshot API)
-MOONSHOT_API_KEY=your_moonshot_api_key_here
-MOONSHOT_API_URL=https://api.moonshot.cn/v1
-
-# Optional: OpenAI Configuration (fallback)
-OPENAI_API_KEY=your_openai_api_key_here
+# AI Model Configuration (OpenAI Compatible API)
+OPENAI_API_KEY=your_api_key_here
+OPENAI_API_URL=https://api.openai.com/v1
+OPENAI_API_MODEL=gpt-3.5-turbo
 
 # Server Configuration
 LOG_LEVEL=info
@@ -69,7 +67,7 @@ Add this to your Claude Desktop configuration file:
         "NEO4J_URI": "bolt://localhost:7687",
         "NEO4J_USER": "neo4j",
         "NEO4J_PASSWORD": "neo4j_password",
-        "MOONSHOT_API_KEY": "your_moonshot_api_key_here"
+        "OPENAI_API_KEY": "your_api_key_here"
       }
     }
   }
@@ -178,9 +176,9 @@ class Graphiti {
 | `NEO4J_URI` | Neo4j database URI | `bolt://localhost:7687` |
 | `NEO4J_USER` | Neo4j username | `neo4j` |
 | `NEO4J_PASSWORD` | Neo4j password | Required |
-| `MOONSHOT_API_KEY` | Moonshot API key | Required |
-| `MOONSHOT_API_URL` | Moonshot API URL | `https://api.moonshot.cn/v1` |
-| `OPENAI_API_KEY` | OpenAI API key (optional) | Optional |
+| `OPENAI_API_KEY` | OpenAI-compatible API key | Required |
+| `OPENAI_API_URL` | OpenAI-compatible API URL | `https://api.openai.com/v1` |
+| `OPENAI_API_MODEL` | AI model name | `gpt-3.5-turbo` |
 | `LOG_LEVEL` | Log level | `info` |
 | `NODE_ENV` | Node environment | `development` |
 
