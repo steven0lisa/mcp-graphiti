@@ -48,8 +48,8 @@ NEO4J_DATABASE=neo4j
 # 支持任何OpenAI兼容的API服务，包括Moonshot、OpenAI、智谱AI等
 # LLM和Embedding共享同一套配置
 EMBEDDING_API_KEY=your_api_key_here
-EMBEDDING_API_URL=https://api.moonshot.cn/v1
-EMBEDDING_MODEL=moonshot-v1-8k
+EMBEDDING_API_URL=https://open.bigmodel.cn/api/paas/v4/embeddings
+EMBEDDING_MODEL=embedding-3
 
 # Server Configuration
 LOG_LEVEL=info
@@ -76,8 +76,8 @@ Add this to your Claude Desktop configuration file:
         "NEO4J_PASSWORD": "neo4j_password",
         "NEO4J_DATABASE": "neo4j",
         "EMBEDDING_API_KEY": "your_api_key_here",
-        "EMBEDDING_API_URL": "https://api.moonshot.cn/v1",
-        "EMBEDDING_MODEL": "moonshot-v1-8k"
+        "EMBEDDING_API_URL": "https://open.bigmodel.cn/api/paas/v4/embeddings",
+        "EMBEDDING_MODEL": "embedding-3"
       }
     }
   }

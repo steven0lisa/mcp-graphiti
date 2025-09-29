@@ -27,6 +27,7 @@ describe('Config', () => {
       process.env.EMBEDDING_API_KEY = 'test-key';
       process.env.EMBEDDING_API_URL = 'https://test.moonshot.cn/v1';
       process.env.EMBEDDING_MODEL = 'moonshot-v1-8k';
+      process.env.LLM_MODEL = 'moonshot-v1-8k'; // 添加LLM_MODEL环境变量
       process.env.LOG_LEVEL = 'debug';
       process.env.GRAPHITI_EMBEDDING_DIMENSION = '768';
 
@@ -55,7 +56,7 @@ describe('Config', () => {
       expect(config.database.uri).toBe('bolt://localhost:7687');
       expect(config.database.user).toBe('neo4j');
       expect(config.llm.provider).toBe('openai');
-      expect(config.llm.api_url).toBe('https://api.openai.com/v1');
+      expect(config.llm.api_url).toBe('https://open.bigmodel.cn/api/paas/v4');
       expect(config.log_level).toBe('info');
       expect(config.embedding_dimension).toBe(1536);
     });
@@ -84,6 +85,7 @@ describe('Config', () => {
       process.env.EMBEDDING_API_KEY = 'unified-key';
       process.env.EMBEDDING_API_URL = 'https://api.moonshot.cn/v1';
       process.env.EMBEDDING_MODEL = 'moonshot-v1-8k';
+      process.env.LLM_MODEL = 'moonshot-v1-8k'; // 添加LLM_MODEL环境变量
 
       const config = loadConfig();
 

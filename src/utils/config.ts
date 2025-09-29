@@ -13,12 +13,12 @@ export function loadConfig(): GraphitiConfig {
     database: process.env.NEO4J_DATABASE,
   };
 
-  // LLM configuration (使用统一的EMBEDDING配置)
+  // LLM configuration (使用embedding配置，因为都需要OpenAI兼容API)
   const llm: LLMConfig = {
-    provider: 'openai', // 统一使用openai协议
+    provider: 'openai',
     api_key: process.env.EMBEDDING_API_KEY || '',
-    api_url: process.env.EMBEDDING_API_URL || 'https://api.openai.com/v1',
-    model: process.env.EMBEDDING_MODEL || 'gpt-3.5-turbo',
+    api_url: (process.env.EMBEDDING_API_URL || 'https://open.bigmodel.cn/api/paas/v4/embeddings').replace('/embeddings', ''),
+    model: process.env.LLM_MODEL || 'glm-4-flash',
   };
 
   // Embedding configuration (智谱AI)
@@ -29,7 +29,7 @@ export function loadConfig(): GraphitiConfig {
   };
 
   // Validate required configuration
-  if (!llm.api_key) {
+  if (!embedding.api_key) {
     throw new Error('EMBEDDING_API_KEY must be provided');
   }
 

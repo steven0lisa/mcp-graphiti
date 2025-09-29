@@ -1,4 +1,4 @@
-import neo4j, { Driver } from 'neo4j-driver';
+import neo4j, { Driver, int } from 'neo4j-driver';
 import { DatabaseConfig, Node, Edge } from '../types/index.js';
 import { Logger } from '../utils/logger.js';
 
@@ -104,11 +104,24 @@ export class Neo4jDriver {
     `;
 
     try {
-      const results = await this.runQuery(cypherQuery, { query, limit });
-      return results.map((record: any) => ({
-        ...record.node.properties,
-        score: record.score,
-      }));
+      this.logger.debug('searchNodes called with:', { query, limit, limitType: typeof limit, flooredLimit: Math.floor(limit) });
+      const params = { query, limit: int(Math.floor(limit)) };
+      this.logger.debug('searchNodes parameters:', params);
+      const results = await this.runQuery(cypherQuery, params);
+      this.logger.debug('searchNodes results:', results);
+      return results.map((record: any) => {
+        this.logger.debug('Processing record:', record);
+        // 修复：正确访问节点属性
+        const node = record.n || record.node;
+        if (!node) {
+          this.logger.warn('No node found in record:', record);
+          return null;
+        }
+        return {
+          ...node.properties,
+          score: record.score,
+        };
+      }).filter(Boolean); // 过滤掉null值
     } catch (error) {
       this.logger.error('Node search failed:', error);
       throw error;
