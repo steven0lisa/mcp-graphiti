@@ -44,14 +44,20 @@ NEO4J_USER=neo4j
 NEO4J_PASSWORD=neo4j_password
 NEO4J_DATABASE=neo4j
 
-# AI Model Configuration (OpenAI Compatible API)
-OPENAI_API_KEY=your_api_key_here
-OPENAI_API_URL=https://api.openai.com/v1
-OPENAI_API_MODEL=gpt-3.5-turbo
+# AI Model Configuration (统一配置)
+# 支持任何OpenAI兼容的API服务，包括Moonshot、OpenAI、智谱AI等
+# LLM和Embedding共享同一套配置
+EMBEDDING_API_KEY=your_api_key_here
+EMBEDDING_API_URL=https://api.moonshot.cn/v1
+EMBEDDING_MODEL=moonshot-v1-8k
 
 # Server Configuration
 LOG_LEVEL=info
 NODE_ENV=development
+
+# Graphiti Configuration
+GRAPHITI_DATABASE=neo4j
+GRAPHITI_EMBEDDING_DIMENSION=1536
 ```
 
 ## Usage with Claude Desktop
@@ -69,7 +75,9 @@ Add this to your Claude Desktop configuration file:
         "NEO4J_USER": "neo4j",
         "NEO4J_PASSWORD": "neo4j_password",
         "NEO4J_DATABASE": "neo4j",
-        "OPENAI_API_KEY": "your_api_key_here"
+        "EMBEDDING_API_KEY": "your_api_key_here",
+        "EMBEDDING_API_URL": "https://api.moonshot.cn/v1",
+        "EMBEDDING_MODEL": "moonshot-v1-8k"
       }
     }
   }
@@ -179,9 +187,10 @@ class Graphiti {
 | `NEO4J_USER` | Neo4j username | `neo4j` |
 | `NEO4J_PASSWORD` | Neo4j password | Required |
 | `NEO4J_DATABASE` | Neo4j database name | `neo4j` |
-| `OPENAI_API_KEY` | OpenAI-compatible API key | Required |
-| `OPENAI_API_URL` | OpenAI-compatible API URL | `https://api.openai.com/v1` |
-| `OPENAI_API_MODEL` | AI model name | `gpt-3.5-turbo` |
+| `EMBEDDING_API_KEY` | AI model API key (OpenAI-compatible) | Required |
+| `EMBEDDING_API_URL` | AI model API URL | `https://api.openai.com/v1` |
+| `EMBEDDING_MODEL` | AI model name | `gpt-3.5-turbo` |
+| `GRAPHITI_EMBEDDING_DIMENSION` | Embedding vector dimension | `1536` |
 | `LOG_LEVEL` | Log level | `info` |
 | `NODE_ENV` | Node environment | `development` |
 
