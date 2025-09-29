@@ -1,6 +1,6 @@
 import { LLMConfig } from '../types/index.js';
 import { Logger } from '../utils/logger.js';
-import { MoonshotClient } from './moonshot.js';
+import { OpenAICompatibleClient } from './moonshot.js';
 import { OpenAIClient } from './openai.js';
 
 export interface LLMClient {
@@ -12,16 +12,10 @@ export interface LLMClient {
 }
 
 export function createLLMClient(config: LLMConfig, logger: Logger): LLMClient {
-  switch (config.provider) {
-    case 'moonshot':
-      return new MoonshotClient(config, logger);
-    case 'openai':
-      return new OpenAIClient(config, logger);
-    default:
-      throw new Error(`Unsupported LLM provider: ${config.provider}`);
-  }
+  // 统一使用OpenAI兼容客户端，支持任何OpenAI兼容的API服务
+  return new OpenAICompatibleClient(config, logger);
 }
 
-export { MoonshotClient } from './moonshot.js';
+export { OpenAICompatibleClient } from './moonshot.js';
 export { OpenAIClient } from './openai.js';
 export type { ChatMessage, ChatResponse } from './moonshot.js';

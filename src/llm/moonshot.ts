@@ -15,7 +15,7 @@ export interface ChatResponse {
   };
 }
 
-export class MoonshotClient {
+export class OpenAICompatibleClient {
   private apiKey: string;
   private apiUrl: string;
   private model: string;
@@ -23,14 +23,14 @@ export class MoonshotClient {
 
   constructor(config: LLMConfig, logger: Logger) {
     this.apiKey = config.api_key;
-    this.apiUrl = config.api_url || 'https://api.moonshot.cn/v1';
-    this.model = config.model || 'moonshot-v1-8k';
+    this.apiUrl = config.api_url || 'https://api.openai.com/v1';
+    this.model = config.model || 'gpt-3.5-turbo';
     this.logger = logger;
   }
 
   async chat(messages: ChatMessage[]): Promise<ChatResponse> {
     try {
-      this.logger.debug('Sending request to Moonshot API:', {
+      this.logger.debug('Sending request to OpenAI Compatible API:', {
         model: this.model,
         messageCount: messages.length,
       });
@@ -57,12 +57,12 @@ export class MoonshotClient {
       const data: any = await response.json();
 
       if (!data.choices || data.choices.length === 0) {
-        throw new Error('No response choices from Moonshot API');
+        throw new Error('No response choices from OpenAI Compatible API');
       }
 
       const content = data.choices[0].message?.content || '';
 
-      this.logger.debug('Received response from Moonshot API:', {
+      this.logger.debug('Received response from OpenAI Compatible API:', {
         contentLength: content.length,
         usage: data.usage,
       });
@@ -72,7 +72,7 @@ export class MoonshotClient {
         usage: data.usage,
       };
     } catch (error) {
-      this.logger.error('Failed to call Moonshot API:', error);
+      this.logger.error('Failed to call OpenAI Compatible API:', error);
       throw error;
     }
   }
@@ -153,4 +153,4 @@ export class MoonshotClient {
   }
 }
 
-export default MoonshotClient;
+export default OpenAICompatibleClient;

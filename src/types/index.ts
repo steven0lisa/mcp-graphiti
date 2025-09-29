@@ -73,9 +73,9 @@ export const DatabaseConfigSchema = z.object({
   database: z.string().optional(),
 });
 
-// LLM Configuration
+// LLM Configuration (OpenAI Compatible API)
 export const LLMConfigSchema = z.object({
-  provider: z.enum(['openai', 'moonshot']),
+  provider: z.literal('openai'), // 统一使用openai协议
   api_key: z.string(),
   api_url: z.string().optional(),
   model: z.string().optional(),

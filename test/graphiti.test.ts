@@ -22,7 +22,7 @@ describe('Graphiti', () => {
       password: 'testpass',
     },
     llm: {
-      provider: 'moonshot',
+      provider: 'openai',
       api_key: 'test-key',
       api_url: 'https://api.moonshot.cn/v1',
       model: 'moonshot-v1-8k',

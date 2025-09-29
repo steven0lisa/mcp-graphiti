@@ -13,17 +13,17 @@ export function loadConfig(): GraphitiConfig {
     database: process.env.NEO4J_DATABASE,
   };
 
-  // LLM configuration
+  // LLM configuration (OpenAI Compatible API)
   const llm: LLMConfig = {
-    provider: (process.env.LLM_PROVIDER as 'openai' | 'moonshot') || 'moonshot',
-    api_key: process.env.MOONSHOT_API_KEY || process.env.OPENAI_API_KEY || '',
-    api_url: process.env.MOONSHOT_API_URL || 'https://api.moonshot.cn/v1',
-    model: process.env.LLM_MODEL || 'moonshot-v1-8k',
+    provider: 'openai', // 统一使用openai协议
+    api_key: process.env.OPENAI_API_KEY || '',
+    api_url: process.env.OPENAI_API_URL || 'https://api.openai.com/v1',
+    model: process.env.OPENAI_API_MODEL || 'gpt-3.5-turbo',
   };
 
   // Validate required configuration
   if (!llm.api_key) {
-    throw new Error('MOONSHOT_API_KEY or OPENAI_API_KEY must be provided');
+    throw new Error('OPENAI_API_KEY must be provided');
   }
 
   return {

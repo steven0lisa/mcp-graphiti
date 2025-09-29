@@ -90,13 +90,13 @@ async function demo() {
 }
 
 // Run demo only if required environment variables are set
-if (process.env.MOONSHOT_API_KEY && process.env.NEO4J_PASSWORD) {
+if (process.env.OPENAI_API_KEY && process.env.NEO4J_PASSWORD) {
   demo().catch((error) => {
     console.error('Demo execution failed:', error);
     process.exit(1);
   });
 } else {
   console.log('⚠️  Demo skipped: Missing required environment variables');
-  console.log('Please set MOONSHOT_API_KEY and NEO4J_PASSWORD environment variables');
+  console.log('Please set OPENAI_API_KEY and NEO4J_PASSWORD environment variables');
   console.log('You can copy .env.example to .env and fill in your credentials');
 }

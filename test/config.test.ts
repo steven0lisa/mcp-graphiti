@@ -24,9 +24,9 @@ describe('Config', () => {
       process.env.NEO4J_URI = 'bolt://test:7687';
       process.env.NEO4J_USER = 'testuser';
       process.env.NEO4J_PASSWORD = 'testpass';
-      process.env.MOONSHOT_API_KEY = 'test-key';
-      process.env.MOONSHOT_API_URL = 'https://test.moonshot.cn/v1';
-      process.env.LLM_PROVIDER = 'moonshot';
+      process.env.OPENAI_API_KEY = 'test-key';
+      process.env.OPENAI_API_URL = 'https://test.moonshot.cn/v1';
+      process.env.OPENAI_API_MODEL = 'moonshot-v1-8k';
       process.env.LOG_LEVEL = 'debug';
       process.env.GRAPHITI_EMBEDDING_DIMENSION = '768';
 
@@ -35,36 +35,37 @@ describe('Config', () => {
       expect(config.database.uri).toBe('bolt://test:7687');
       expect(config.database.user).toBe('testuser');
       expect(config.database.password).toBe('testpass');
-      expect(config.llm.provider).toBe('moonshot');
+      expect(config.llm.provider).toBe('openai');
       expect(config.llm.api_key).toBe('test-key');
       expect(config.llm.api_url).toBe('https://test.moonshot.cn/v1');
+      expect(config.llm.model).toBe('moonshot-v1-8k');
       expect(config.log_level).toBe('debug');
       expect(config.embedding_dimension).toBe(768);
     });
 
     it('should use default values when environment variables are not set', () => {
       process.env.NEO4J_PASSWORD = 'testpass';
-      process.env.MOONSHOT_API_KEY = 'test-key';
+      process.env.OPENAI_API_KEY = 'test-key';
 
       const config = loadConfig();
 
       expect(config.database.uri).toBe('bolt://localhost:7687');
       expect(config.database.user).toBe('neo4j');
-      expect(config.llm.provider).toBe('moonshot');
-      expect(config.llm.api_url).toBe('https://api.moonshot.cn/v1');
+      expect(config.llm.provider).toBe('openai');
+      expect(config.llm.api_url).toBe('https://api.openai.com/v1');
       expect(config.log_level).toBe('info');
       expect(config.embedding_dimension).toBe(1536);
     });
 
-    it('should throw error when MOONSHOT_API_KEY is not provided', () => {
+    it('should throw error when OPENAI_API_KEY is not provided', () => {
       process.env.NEO4J_PASSWORD = 'testpass';
-      // MOONSHOT_API_KEY is not set
+      // OPENAI_API_KEY is not set
 
-      expect(() => loadConfig()).toThrow('MOONSHOT_API_KEY or OPENAI_API_KEY must be provided');
+      expect(() => loadConfig()).toThrow('OPENAI_API_KEY must be provided');
     });
 
     it('should throw error when NEO4J_PASSWORD is not provided', () => {
-      process.env.MOONSHOT_API_KEY = 'test-key';
+      process.env.OPENAI_API_KEY = 'test-key';
       process.env.NEO4J_PASSWORD = 'valid_password'; // Set a valid password first
 
       const config = loadConfig();
@@ -75,23 +76,17 @@ describe('Config', () => {
       expect(() => validateConfig(config)).toThrow('Database password is required');
     });
 
-    it('should prefer MOONSHOT_API_KEY over OPENAI_API_KEY', () => {
-      process.env.NEO4J_PASSWORD = 'testpass';
-      process.env.MOONSHOT_API_KEY = 'moonshot-key';
-      process.env.OPENAI_API_KEY = 'openai-key';
-
-      const config = loadConfig();
-
-      expect(config.llm.api_key).toBe('moonshot-key');
-    });
-
-    it('should use OPENAI_API_KEY when MOONSHOT_API_KEY is not available', () => {
+    it('should use OPENAI_API_KEY correctly', () => {
       process.env.NEO4J_PASSWORD = 'testpass';
       process.env.OPENAI_API_KEY = 'openai-key';
+      process.env.OPENAI_API_URL = 'https://api.moonshot.cn/v1';
+      process.env.OPENAI_API_MODEL = 'moonshot-v1-8k';
 
       const config = loadConfig();
 
       expect(config.llm.api_key).toBe('openai-key');
+      expect(config.llm.api_url).toBe('https://api.moonshot.cn/v1');
+      expect(config.llm.model).toBe('moonshot-v1-8k');
     });
   });
 
@@ -104,10 +99,10 @@ describe('Config', () => {
           password: 'testpass',
         },
         llm: {
-          provider: 'moonshot',
+          provider: 'openai',
           api_key: 'test-key',
-          api_url: 'https://api.moonshot.cn/v1',
-          model: 'moonshot-v1-8k',
+          api_url: 'https://api.openai.com/v1',
+          model: 'gpt-3.5-turbo',
         },
         embedding_dimension: 1536,
         log_level: 'info',
@@ -124,7 +119,7 @@ describe('Config', () => {
           password: 'testpass',
         },
         llm: {
-          provider: 'moonshot',
+          provider: 'openai',
           api_key: 'test-key',
         },
         embedding_dimension: 1536,
@@ -142,7 +137,7 @@ describe('Config', () => {
           password: 'testpass',
         },
         llm: {
-          provider: 'moonshot',
+          provider: 'openai',
           api_key: 'test-key',
         },
         embedding_dimension: 1536,
@@ -160,7 +155,7 @@ describe('Config', () => {
           password: '',
         },
         llm: {
-          provider: 'moonshot',
+          provider: 'openai',
           api_key: 'test-key',
         },
         embedding_dimension: 1536,
@@ -178,7 +173,7 @@ describe('Config', () => {
           password: 'testpass',
         },
         llm: {
-          provider: 'moonshot',
+          provider: 'openai',
           api_key: '',
         },
         embedding_dimension: 1536,
@@ -196,7 +191,7 @@ describe('Config', () => {
           password: 'testpass',
         },
         llm: {
-          provider: 'moonshot',
+          provider: 'openai',
           api_key: 'test-key',
         },
         embedding_dimension: 0,
@@ -214,7 +209,7 @@ describe('Config', () => {
           password: 'testpass',
         },
         llm: {
-          provider: 'moonshot',
+          provider: 'openai',
           api_key: 'test-key',
         },
         embedding_dimension: -100,

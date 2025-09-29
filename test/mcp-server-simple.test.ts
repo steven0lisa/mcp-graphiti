@@ -18,7 +18,7 @@ describe('GraphitiMcpServer (Simplified)', () => {
       password: 'testpass',
     },
     llm: {
-      provider: 'moonshot' as const,
+      provider: 'openai' as const,
       api_key: 'test-key',
       api_url: 'https://api.moonshot.cn/v1',
       model: 'moonshot-v1-8k',
@@ -179,7 +179,7 @@ describe('GraphitiMcpServer (Simplified)', () => {
           password: '', // Empty password
         },
         llm: {
-          provider: 'moonshot' as const,
+          provider: 'openai' as const,
           api_key: 'test-key',
         },
         embedding_dimension: 1536,
