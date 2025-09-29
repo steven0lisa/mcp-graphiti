@@ -5,6 +5,7 @@ import { Logger } from '../utils/logger.js';
 export class Neo4jDriver {
   private driver: Driver;
   private logger: Logger;
+  private database?: string;
 
   constructor(config: DatabaseConfig, logger: Logger) {
     this.driver = neo4j.driver(config.uri, neo4j.auth.basic(config.user, config.password), {
@@ -12,6 +13,7 @@ export class Neo4jDriver {
       connectionAcquisitionTimeout: 60000,
     });
     this.logger = logger;
+    this.database = config.database;
   }
 
   async connect(): Promise<void> {
@@ -30,7 +32,7 @@ export class Neo4jDriver {
   }
 
   async runQuery(query: string, parameters: Record<string, any> = {}): Promise<any> {
-    const session = this.driver.session();
+    const session = this.driver.session({ database: this.database });
     try {
       this.logger.debug('Executing Neo4j query:', query, parameters);
       const result = await session.run(query, parameters);

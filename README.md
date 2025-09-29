@@ -15,18 +15,18 @@ A Node.js implementation of the Graphiti temporal knowledge graph system as a Mo
 
 ### Via NPX (Recommended)
 ```bash
-npx @graphiti/mcp-server
+npx @zhangzichao2008/mcp-graphiti
 ```
 
 ### Via NPM
 ```bash
-npm install -g @graphiti/mcp-server
+npm install -g @zhangzichao2008/mcp-graphiti
 graphiti-mcp
 ```
 
 ### From Source
 ```bash
-git clone https://github.com/graphiti-team/mcp-graphiti.git
+git clone https://github.com/steven0lisa/mcp-graphiti.git
 cd mcp-graphiti
 npm install
 npm run build
@@ -42,6 +42,7 @@ Create a `.env` file in your project directory:
 NEO4J_URI=bolt://localhost:7687
 NEO4J_USER=neo4j
 NEO4J_PASSWORD=neo4j_password
+NEO4J_DATABASE=neo4j
 
 # AI Model Configuration (OpenAI Compatible API)
 OPENAI_API_KEY=your_api_key_here
@@ -62,11 +63,12 @@ Add this to your Claude Desktop configuration file:
   "mcpServers": {
     "graphiti": {
       "command": "npx",
-      "args": ["@graphiti/mcp-server"],
+      "args": ["@zhangzichao2008/mcp-graphiti"],
       "env": {
         "NEO4J_URI": "bolt://localhost:7687",
         "NEO4J_USER": "neo4j",
         "NEO4J_PASSWORD": "neo4j_password",
+        "NEO4J_DATABASE": "neo4j",
         "OPENAI_API_KEY": "your_api_key_here"
       }
     }
@@ -176,6 +178,7 @@ class Graphiti {
 | `NEO4J_URI` | Neo4j database URI | `bolt://localhost:7687` |
 | `NEO4J_USER` | Neo4j username | `neo4j` |
 | `NEO4J_PASSWORD` | Neo4j password | Required |
+| `NEO4J_DATABASE` | Neo4j database name | `neo4j` |
 | `OPENAI_API_KEY` | OpenAI-compatible API key | Required |
 | `OPENAI_API_URL` | OpenAI-compatible API URL | `https://api.openai.com/v1` |
 | `OPENAI_API_MODEL` | AI model name | `gpt-3.5-turbo` |
@@ -198,7 +201,7 @@ Apache 2.0 License
 ## Support
 
 For issues and questions:
-- GitHub Issues: https://github.com/graphiti-team/mcp-graphiti/issues
+- GitHub Issues: https://github.com/steven0lisa/mcp-graphiti/issues
 - Discord: [Join our Discord server]
 
 ## Security
