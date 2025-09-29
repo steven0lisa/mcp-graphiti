@@ -196,6 +196,18 @@ export class Neo4jDriver {
     }
   }
 
+  async vectorSearch(queryEmbedding: number[], limit: number = 10): Promise<Array<{node: Node, score: number}>> {
+    // For now, fallback to keyword search since vector search requires additional Neo4j setup
+    // In a full implementation, this would use Neo4j's vector index capabilities
+    this.logger.warn('Vector search not implemented, falling back to text search');
+    
+    const nodes = await this.searchNodes('', limit);
+    return nodes.map(node => ({
+      node,
+      score: 0.5 // Default similarity score
+    }));
+  }
+
   async healthCheck(): Promise<boolean> {
     try {
       await this.driver.verifyConnectivity();

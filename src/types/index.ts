@@ -81,10 +81,18 @@ export const LLMConfigSchema = z.object({
   model: z.string().optional(),
 });
 
+// Embedding Configuration (智谱AI)
+export const EmbeddingConfigSchema = z.object({
+  api_key: z.string(),
+  api_url: z.string(),
+  model: z.string(),
+});
+
 // Graphiti Configuration
 export const GraphitiConfigSchema = z.object({
   database: DatabaseConfigSchema,
   llm: LLMConfigSchema,
+  embedding: EmbeddingConfigSchema,
   embedding_dimension: z.number().int().default(1536),
   log_level: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
 });
@@ -101,6 +109,7 @@ export type GetFactsInput = z.infer<typeof GetFactsInputSchema>;
 
 export type DatabaseConfig = z.infer<typeof DatabaseConfigSchema>;
 export type LLMConfig = z.infer<typeof LLMConfigSchema>;
+export type EmbeddingConfig = z.infer<typeof EmbeddingConfigSchema>;
 export type GraphitiConfig = z.infer<typeof GraphitiConfigSchema>;
 
 // Episode and Search Result Types

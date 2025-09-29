@@ -24,9 +24,9 @@ describe('Config', () => {
       process.env.NEO4J_URI = 'bolt://test:7687';
       process.env.NEO4J_USER = 'testuser';
       process.env.NEO4J_PASSWORD = 'testpass';
-      process.env.OPENAI_API_KEY = 'test-key';
-      process.env.OPENAI_API_URL = 'https://test.moonshot.cn/v1';
-      process.env.OPENAI_API_MODEL = 'moonshot-v1-8k';
+      process.env.EMBEDDING_API_KEY = 'test-key';
+      process.env.EMBEDDING_API_URL = 'https://test.moonshot.cn/v1';
+      process.env.EMBEDDING_MODEL = 'moonshot-v1-8k';
       process.env.LOG_LEVEL = 'debug';
       process.env.GRAPHITI_EMBEDDING_DIMENSION = '768';
 
@@ -39,13 +39,16 @@ describe('Config', () => {
       expect(config.llm.api_key).toBe('test-key');
       expect(config.llm.api_url).toBe('https://test.moonshot.cn/v1');
       expect(config.llm.model).toBe('moonshot-v1-8k');
+      expect(config.embedding.api_key).toBe('test-key');
+      expect(config.embedding.api_url).toBe('https://test.moonshot.cn/v1');
+      expect(config.embedding.model).toBe('moonshot-v1-8k');
       expect(config.log_level).toBe('debug');
       expect(config.embedding_dimension).toBe(768);
     });
 
     it('should use default values when environment variables are not set', () => {
       process.env.NEO4J_PASSWORD = 'testpass';
-      process.env.OPENAI_API_KEY = 'test-key';
+      process.env.EMBEDDING_API_KEY = 'test-embedding-key';
 
       const config = loadConfig();
 
@@ -57,15 +60,15 @@ describe('Config', () => {
       expect(config.embedding_dimension).toBe(1536);
     });
 
-    it('should throw error when OPENAI_API_KEY is not provided', () => {
+    it('should throw error when EMBEDDING_API_KEY is not provided', () => {
       process.env.NEO4J_PASSWORD = 'testpass';
-      // OPENAI_API_KEY is not set
+      // EMBEDDING_API_KEY is not set
 
-      expect(() => loadConfig()).toThrow('OPENAI_API_KEY must be provided');
+      expect(() => loadConfig()).toThrow('EMBEDDING_API_KEY must be provided');
     });
 
     it('should throw error when NEO4J_PASSWORD is not provided', () => {
-      process.env.OPENAI_API_KEY = 'test-key';
+      process.env.EMBEDDING_API_KEY = 'test-embedding-key';
       process.env.NEO4J_PASSWORD = 'valid_password'; // Set a valid password first
 
       const config = loadConfig();
@@ -76,17 +79,20 @@ describe('Config', () => {
       expect(() => validateConfig(config)).toThrow('Database password is required');
     });
 
-    it('should use OPENAI_API_KEY correctly', () => {
+    it('should use EMBEDDING_API_KEY correctly', () => {
       process.env.NEO4J_PASSWORD = 'testpass';
-      process.env.OPENAI_API_KEY = 'openai-key';
-      process.env.OPENAI_API_URL = 'https://api.moonshot.cn/v1';
-      process.env.OPENAI_API_MODEL = 'moonshot-v1-8k';
+      process.env.EMBEDDING_API_KEY = 'unified-key';
+      process.env.EMBEDDING_API_URL = 'https://api.moonshot.cn/v1';
+      process.env.EMBEDDING_MODEL = 'moonshot-v1-8k';
 
       const config = loadConfig();
 
-      expect(config.llm.api_key).toBe('openai-key');
+      expect(config.llm.api_key).toBe('unified-key');
       expect(config.llm.api_url).toBe('https://api.moonshot.cn/v1');
       expect(config.llm.model).toBe('moonshot-v1-8k');
+      expect(config.embedding.api_key).toBe('unified-key');
+      expect(config.embedding.api_url).toBe('https://api.moonshot.cn/v1');
+      expect(config.embedding.model).toBe('moonshot-v1-8k');
     });
   });
 
@@ -103,6 +109,11 @@ describe('Config', () => {
           api_key: 'test-key',
           api_url: 'https://api.openai.com/v1',
           model: 'gpt-3.5-turbo',
+        },
+        embedding: {
+          api_key: 'test-embedding-key',
+          api_url: 'https://test.com/embeddings',
+          model: 'test-model',
         },
         embedding_dimension: 1536,
         log_level: 'info',
@@ -122,6 +133,11 @@ describe('Config', () => {
           provider: 'openai',
           api_key: 'test-key',
         },
+        embedding: {
+          api_key: 'test-embedding-key',
+          api_url: 'https://test.com/embeddings',
+          model: 'test-model',
+        },
         embedding_dimension: 1536,
         log_level: 'info',
       };
@@ -139,6 +155,11 @@ describe('Config', () => {
         llm: {
           provider: 'openai',
           api_key: 'test-key',
+        },
+        embedding: {
+          api_key: 'test-embedding-key',
+          api_url: 'https://test.com/embeddings',
+          model: 'test-model',
         },
         embedding_dimension: 1536,
         log_level: 'info',
@@ -158,6 +179,11 @@ describe('Config', () => {
           provider: 'openai',
           api_key: 'test-key',
         },
+        embedding: {
+          api_key: 'test-embedding-key',
+          api_url: 'https://test.com/embeddings',
+          model: 'test-model',
+        },
         embedding_dimension: 1536,
         log_level: 'info',
       };
@@ -175,6 +201,11 @@ describe('Config', () => {
         llm: {
           provider: 'openai',
           api_key: '',
+        },
+        embedding: {
+          api_key: 'test-embedding-key',
+          api_url: 'https://test.com/embeddings',
+          model: 'test-model',
         },
         embedding_dimension: 1536,
         log_level: 'info',
@@ -194,6 +225,11 @@ describe('Config', () => {
           provider: 'openai',
           api_key: 'test-key',
         },
+        embedding: {
+          api_key: 'test-embedding-key',
+          api_url: 'https://test.com/embeddings',
+          model: 'test-model',
+        },
         embedding_dimension: 0,
         log_level: 'info',
       };
@@ -211,6 +247,11 @@ describe('Config', () => {
         llm: {
           provider: 'openai',
           api_key: 'test-key',
+        },
+        embedding: {
+          api_key: 'test-embedding-key',
+          api_url: 'https://test.com/embeddings',
+          model: 'test-model',
         },
         embedding_dimension: -100,
         log_level: 'info',

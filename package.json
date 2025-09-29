@@ -1,6 +1,6 @@
 {
   "name": "@zhangzichao2008/mcp-graphiti",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Graphiti MCP Server - Temporal Knowledge Graph for AI Agents",
   "main": "dist/index.js",
   "type": "module",

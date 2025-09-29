@@ -23,6 +23,11 @@ describe('GraphitiMcpServer (Simplified)', () => {
       api_url: 'https://api.moonshot.cn/v1',
       model: 'moonshot-v1-8k',
     },
+    embedding: {
+      api_key: 'test-embedding-key',
+      api_url: 'https://test.com/embeddings',
+      model: 'test-model',
+    },
     embedding_dimension: 1536,
     log_level: 'info' as const,
   };
@@ -181,6 +186,11 @@ describe('GraphitiMcpServer (Simplified)', () => {
         llm: {
           provider: 'openai' as const,
           api_key: 'test-key',
+        },
+        embedding: {
+          api_key: 'test-embedding-key',
+          api_url: 'https://test.com/embeddings',
+          model: 'test-model',
         },
         embedding_dimension: 1536,
         log_level: 'info' as const,

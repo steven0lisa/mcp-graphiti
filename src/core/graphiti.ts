@@ -3,12 +3,14 @@ import { formatISO } from 'date-fns';
 import { GraphitiConfig, Node, Edge, Episode, SearchResult } from '../types/index.js';
 import { Neo4jDriver } from '../drivers/neo4j.js';
 import { createLLMClient, LLMClient } from '../llm/index.js';
+import { BigModelEmbedder } from '../embedder/index.js';
 import { Logger } from '../utils/logger.js';
 
 export class Graphiti {
   private config: GraphitiConfig;
   private database: Neo4jDriver;
   private llm: LLMClient;
+  private embedder: BigModelEmbedder;
   private logger: Logger;
 
   constructor(config: GraphitiConfig, logger: Logger) {
@@ -16,6 +18,7 @@ export class Graphiti {
     this.logger = logger;
     this.database = new Neo4jDriver(config.database, logger);
     this.llm = createLLMClient(config.llm, logger);
+    this.embedder = new BigModelEmbedder(config.embedding, logger);
   }
 
   async initialize(): Promise<void> {
@@ -158,9 +161,24 @@ export class Graphiti {
   }
 
   private async semanticSearch(query: string, numResults: number): Promise<SearchResult[]> {
-    // For now, use keyword search as a fallback
-    // In a full implementation, this would use embeddings and vector similarity
-    return this.keywordSearch(query, numResults);
+    try {
+      // Generate embedding for the query
+      const queryEmbedding = await this.embedder.generateEmbedding(query);
+      
+      // Search for similar nodes using vector similarity
+      // Note: This requires vector search capability in Neo4j
+      const results = await this.database.vectorSearch(queryEmbedding, numResults);
+      
+      return results.map((result) => ({
+        node: result.node,
+        score: result.score,
+        content: `${result.node.name} (${result.node.type}): ${result.node.summary || 'No description'}`,
+      }));
+    } catch (error) {
+      this.logger.error('Semantic search failed, falling back to keyword search:', error);
+      // Fallback to keyword search if embedding fails
+      return this.keywordSearch(query, numResults);
+    }
   }
 
   private async keywordSearch(query: string, numResults: number): Promise<SearchResult[]> {
@@ -251,23 +269,35 @@ export class Graphiti {
     }
   }
 
-  async healthCheck(): Promise<{ database: boolean; llm: boolean }> {
-    const databaseHealth = await this.database.healthCheck();
-
-    // Simple LLM health check - try to generate a simple response
-    let llmHealth = false;
+  async healthCheck(): Promise<{ database: boolean; llm: boolean; embedding: boolean }> {
     try {
-      const response = await this.llm.generateText('Hello', 'Respond with just "OK"');
-      llmHealth = response.includes('OK');
-    } catch (error) {
-      this.logger.error('LLM health check failed:', error);
-      llmHealth = false;
-    }
+      const databaseHealth = await this.database.healthCheck();
+      
+      // Simple LLM health check - try to generate a simple response
+      let llmHealth = false;
+      try {
+        const response = await this.llm.generateText('Hello', 'Respond with just "OK"');
+        llmHealth = response.includes('OK');
+      } catch (error) {
+        this.logger.error('LLM health check failed:', error);
+        llmHealth = false;
+      }
+      
+      const embeddingHealth = await this.embedder.testConnection();
 
-    return {
-      database: databaseHealth,
-      llm: llmHealth,
-    };
+      return {
+        database: databaseHealth,
+        llm: llmHealth,
+        embedding: embeddingHealth,
+      };
+    } catch (error) {
+      this.logger.error('Health check failed:', error);
+      return {
+        database: false,
+        llm: false,
+        embedding: false,
+      };
+    }
   }
 }
 

@@ -2,17 +2,20 @@ import { Graphiti } from '../src/core/graphiti.js';
 import { Neo4jDriver } from '../src/drivers/neo4j.js';
 import { createLLMClient } from '../src/llm/index.js';
 import { createLogger } from '../src/utils/logger.js';
+import { BigModelEmbedder } from '../src/embedder/bigmodel.js';
 import { GraphitiConfig } from '../src/types/index.js';
 
 // Mock dependencies
 jest.mock('../src/drivers/neo4j.js');
 jest.mock('../src/llm/index.js');
 jest.mock('../src/utils/logger.js');
+jest.mock('../src/embedder/bigmodel.js');
 
 describe('Graphiti', () => {
   let graphiti: Graphiti;
   let mockNeo4jDriver: jest.Mocked<Neo4jDriver>;
   let mockLLMClient: any;
+  let mockEmbedder: jest.Mocked<BigModelEmbedder>;
   let mockLogger: any;
 
   const mockConfig: GraphitiConfig = {
@@ -26,6 +29,11 @@ describe('Graphiti', () => {
       api_key: 'test-key',
       api_url: 'https://api.moonshot.cn/v1',
       model: 'moonshot-v1-8k',
+    },
+    embedding: {
+      api_key: 'test-embedding-key',
+      api_url: 'https://test.com/embeddings',
+      model: 'test-model',
     },
     embedding_dimension: 1536,
     log_level: 'info',
@@ -69,10 +77,17 @@ describe('Graphiti', () => {
       error: jest.fn(),
     };
 
+    mockEmbedder = {
+      generateEmbedding: jest.fn().mockResolvedValue([0.1, 0.2, 0.3]),
+      generateEmbeddings: jest.fn().mockResolvedValue([[0.1, 0.2, 0.3]]),
+      testConnection: jest.fn().mockResolvedValue(true),
+    } as any;
+
     // Setup mocks
     (Neo4jDriver as jest.MockedClass<typeof Neo4jDriver>).mockImplementation(() => mockNeo4jDriver);
     (createLLMClient as jest.Mock).mockReturnValue(mockLLMClient);
     (createLogger as jest.Mock).mockReturnValue(mockLogger);
+    (BigModelEmbedder as jest.MockedClass<typeof BigModelEmbedder>).mockImplementation(() => mockEmbedder);
 
     graphiti = new Graphiti(mockConfig, mockLogger);
   });
@@ -315,6 +330,7 @@ describe('Graphiti', () => {
       expect(health).toEqual({
         database: true,
         llm: true,
+        embedding: true,
       });
       expect(mockNeo4jDriver.healthCheck).toHaveBeenCalledTimes(1);
       expect(mockLLMClient.generateText).toHaveBeenCalledWith('Hello', 'Respond with just "OK"');
@@ -327,6 +343,7 @@ describe('Graphiti', () => {
 
       expect(health.database).toBe(false);
       expect(health.llm).toBe(true);
+      expect(health.embedding).toBe(true);
     });
 
     it('should return unhealthy LLM status when LLM check fails', async () => {
@@ -337,6 +354,7 @@ describe('Graphiti', () => {
 
       expect(health.database).toBe(true);
       expect(health.llm).toBe(false);
+      expect(health.embedding).toBe(true);
       expect(mockLogger.error).toHaveBeenCalledWith('LLM health check failed:', error);
     });
   });
